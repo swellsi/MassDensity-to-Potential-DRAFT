@@ -44,7 +44,23 @@ MM_MilkyWay md;
 	if (direction > 0.){
 	Rcondition = abs(r2+r1max);
 	}
-
+	int *ntheta = new int[N+1];
+	for (int i = 0; i <= N; i++) {
+		ntheta[i] = 0;
+	}
+	double ***thval = new double**[N+1];
+	for (int i = 0; i <= N; i++) {
+		int jmax = blabla enter what your number of N is
+		ntheta[i] = jmax;
+		thval[i] = new double*[jmax];
+		for (int j = 0; j < jmax; j++) {
+			thval[i][j] = new double[3];
+			thval[i][j][0] = your vale of theta
+			thval[i][j][1] = opposite theta
+			thval[i][j][2] = weight (area represented on sphere);
+		}
+	}
+		
 	  while ((R < Rcondition) && (R>0)) {
 	      for (int i=0; i<3; i++){         
 		acc_R[i]=0.;           //initializes fixed R acc =0
@@ -104,8 +120,8 @@ MM_MilkyWay md;
 
 	
 		//varies theta
-		for (int j_theta=0; j_theta<=NN-1; j_theta++){
-		  double theta=theta2+((2.0*((double)(j_theta))+1.0)/2.0)*pi/dNN;       //avoids divergence at origin
+		for (int j_theta=0; j_theta< ntheta[j_phi]; j_theta++){
+		  double theta= theta2 + thval[j_phi][j_theta][0];     //theta2+((2.0*((double)(j_theta))+1.0)/2.0)*pi/dNN;       //avoids divergence at origin
 		  double stheta = sin(theta); double ctheta = cos(theta);
 
 		  //ref frame change to find density
@@ -142,7 +158,7 @@ MM_MilkyWay md;
 		  }	  
 		  for (int i=0; i<3; i++){
 		    acc_point[i]=G*pointDensity*directionVector[i];
-		    acc_R_phi[i]+=acc_point[i]*(pi/dNN)*sphi;    //adds point term to fixed R and phi acc
+		    acc_R_phi[i]+=acc_point[i]*thval[j_phi][j_theta][2];         //(pi/dNN)*sphi;    //adds point term to fixed R and phi acc
 		  }
 		}  // end for theta
 
@@ -183,5 +199,14 @@ MM_MilkyWay md;
 
 	  }
 
+	for (int i = 0; i <= N; i++) {
+		for (int j = 0; j < ntheta[i]; j++) {
+			delete [] thval[i][j];
+		}
+		delete [] thval[i];
+	}
+	delete [] thval;
+	delete [] ntheta;
+		
 //cout<<"\n   acc in "<<direction<<" direction is     "<<acc[0]<<"  "<<acc[1]<<"  "<<acc[2]<<endl<<endl;
 	}
